@@ -1,0 +1,26 @@
+{% extends 'bootstrap/base.html' %}
+{% block content %}
+    <div class="container">
+        <form action="{{ url_for('main.index') }}" method="GET">
+            {% for field in form if field.name != "csrf_token" %}
+                {% if field.name[0] == "g" %}
+                    {{ field }}
+                {% else %}
+                    {% if field.name != "submit" and field.name != "reset" %}
+                        {{ field.label }}<br>
+                    {% endif %}
+                    {{ field }}<br>
+                    {% for error in field.errors %}
+                        {{ error }}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %} 
+
+        </form>
+        {% for elem in query %}
+        <p>
+            {{ elem }}
+        </p>
+        {% endfor %}
+    </div>
+{% endblock %}
