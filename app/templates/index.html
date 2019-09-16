@@ -1,26 +1,66 @@
 {% extends 'bootstrap/base.html' %}
+{% import "bootstrap/wtf.html" as wtf %}
 {% block content %}
-    <div class="container">
-        <form action="{{ url_for('main.index') }}" method="GET">
-            {% for field in form if field.name != "csrf_token" %}
-                {% if field.name[0] == "g" %}
-                    {{ field }}
-                {% else %}
-                    {% if field.name != "submit" and field.name != "reset" %}
-                        {{ field.label }}<br>
+        <div class="row">
+            <div class="col-md-4 ">
+                {{ wtf.quick_form(form, method="GET") }}
+            </div>
+        </div>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        {% for col in columns %}
+                            <th> {{ col }}</th>
+                        {% endfor %}
+                    </tr> 
+                </thead>
+                <tbody>
+                    {% if columns.__len__() == 8 %}
+                        {% for elem in query %}
+                        <tr>
+                            
+                            <td>
+                                {{ elem.id }}
+                            </td>
+                            <td>
+                                {{ elem.date }}
+                            </td>
+                            <td>
+                                {{ elem.keyword }}
+                            </td>
+                            <td>
+                                {{ elem.url }}
+                            </td>
+                            <td>
+                                {{ elem.domain }}
+                            </td>
+                            <td>
+                                {{ elem.timeload }}
+                            </td>
+                            <td>
+                                {{ elem.code_response }}
+                            </td>
+                            <td>
+                                {{ elem.size_page }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    {% else %}
+                        {% for elem in query %}
+                            <tr>
+                                {% for col in elem %}
+                                    <td>{{ col }}</td>
+                                {% endfor %}
+                            </tr>
+                        {% endfor %}
                     {% endif %}
-                    {{ field }}<br>
-                    {% for error in field.errors %}
-                        {{ error }}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %} 
-
-        </form>
-        {% for elem in query %}
-        <p>
-            {{ elem }}
-        </p>
-        {% endfor %}
+                </tbody>
+            </table>
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    {{ moment.include_moment() }}
+
 {% endblock %}

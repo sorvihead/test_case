@@ -30,14 +30,20 @@ def index():
     if any(groups.values()):
         result_set = result_set.with_entities(*[key for key in groups if groups[key]], 
                                                 func.sum(Data.size_page))
-
+        columns = [desc['name'] for desc in result_set.column_descriptions if desc['name']]
+        columns.append('sum_sizes')
+    else:
+        columns = [elem.name for elem in Data.__table__.columns]
     
     for key in filters:
         result_set = Data.filter(result_set, key, filters[key])
 
     if any(groups.values()):
         result_set = result_set.group_by(*[key for key in groups if groups[key]])
+    
     result_set = result_set.all()
-    return render_template('index.html', form=form, query=result_set)
+    if not isinstance(result_set, list):
+        result_set = [result_set]
+    return render_template('index.html', form=form, query=result_set, columns=columns)
 
     
