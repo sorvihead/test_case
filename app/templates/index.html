@@ -3,7 +3,7 @@
 {% block content %}
         <div class="row">
             <div class="col-md-4 ">
-                {{ wtf.quick_form(form, method="GET") }}
+                {{ wtf.quick_form(form, method="GET", novalidate=False) }}
             </div>
         </div>
             <table class="table table-hover">
@@ -23,7 +23,7 @@
                                 {{ elem.id }}
                             </td>
                             <td>
-                                {{ elem.date }}
+                                {{ moment(elem.date).format('LL') }}
                             </td>
                             <td>
                                 {{ elem.keyword }}

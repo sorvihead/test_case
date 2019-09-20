@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import DateField, StringField, SubmitField, BooleanField
-from wtforms.validators import Optional
+from wtforms.validators import Optional, ValidationError
 from datetime import date
 
 class FilterForm(FlaskForm):
@@ -8,11 +8,18 @@ class FilterForm(FlaskForm):
         "Group date",
         validators=(Optional(), )
     )
-    date = DateField(
-        'Date', 
+    date_from = DateField(
+        'Date from', 
         format='%y/%m/%d', 
         validators=(Optional(), ),
-        render_kw={"type": "date"},
+        render_kw={"type": "date", "value": f"{date.today()}"},
+        default=date.today(),
+    )
+    date_to = DateField(
+        'Date to',
+        format='%y/%m/%d',
+        validators=(Optional(), ),
+        render_kw={"type": "date", "value": f"{date.today()}"},
         default=date.today()
     )
     g_kw = BooleanField(

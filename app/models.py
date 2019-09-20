@@ -1,11 +1,13 @@
 from app import db
 from datetime import date
+from datetime import datetime
 from time import time
 
 
 class Data(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, default=date.today, index=True)
+    timestamp = db.Column(db.Time, default=datetime.utcnow().time)
     keyword = db.Column(db.String(50), index=True)
     url = db.Column(db.String(200), index=True)
     domain = db.Column(db.String(100), index=True)
@@ -22,7 +24,7 @@ class Data(db.Model):
             return query
         else:
             if column is Data.date:
-                return cls.filter_date(query, flt)
+                return cls.filter_date(query, *flt)
             elif column is Data.keyword:
                 return cls.filter_keyword(query, flt)
             elif column is Data.domain:
@@ -33,8 +35,8 @@ class Data(db.Model):
                 return cls.filter_size(query, flt)
 
     @classmethod
-    def filter_date(cls, query, date):
-        return query.filter_by(date=date)
+    def filter_date(cls, query, date_from, date_to):
+        return query.filter(Data.date.between(date_from, date_to))
 
     @classmethod
     def filter_keyword(cls, query, keyword):
@@ -48,9 +50,15 @@ class Data(db.Model):
     def filter_code(cls, query, code):
         if isinstance(code, int):
             return query.filter_by(code_response=code)
-        else:
-            code = (int(code[0])*100, int(code[0])*100+99)
+        elif len(code) == 3 and code[1::] in 'xxXX':
+            try:
+                code = (int(code[0]*100), int(code[0]*100)+99)
+            except ValueError:
+                return query
+
             return query.filter(Data.code_response.in_(code))
+        else:
+            return query
 
     @classmethod    
     def filter_size(cls, query, size):
