@@ -13,6 +13,7 @@ moment = Moment()
 
 
 def create_app(config_class=Config):
+    """App factory"""
     app = Flask(__name__)
     app.config.from_object(config_class)
 
@@ -21,10 +22,10 @@ def create_app(config_class=Config):
     bootstrap.init_app(app)
     moment.init_app(app)
 
-    from app.main import bp as main
+    from app.main import bp as main  # Регистрация модуля
     app.register_blueprint(main)
 
     return app
 
 
-from app import models
+from app import models  # Регистрация моделей в приложении

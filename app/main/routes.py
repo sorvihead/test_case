@@ -1,11 +1,12 @@
-from flask import url_for, current_app, render_template, jsonify, request
-
 from app import db
 from app.main import bp
 from app.models import Data
 from app.main.forms import FilterForm
 
 from bs4 import BeautifulSoup
+
+from flask import render_template
+from flask import request
 
 from sqlalchemy import func
 
@@ -16,6 +17,8 @@ import requests
 
 @bp.route('/', methods=['GET'])
 def index():
+    """Основной контроллер, который обрабатывает запросы на фильтрацию и группировку
+    информации из таблицы"""
     form = FilterForm()
     result_set = Data.query
     columns = [elem.name for elem in Data.__table__.columns if elem.name != 'timestamp']
@@ -57,6 +60,7 @@ def index():
 
 @bp.route('/script')
 def script():
+    """Сбор данных для таблицы через поиск яндекса."""
     keyword = request.args.get('keyword')
     if not keyword:
         return 'I need keyword', 400

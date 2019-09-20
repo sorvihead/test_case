@@ -1,7 +1,7 @@
 import requests
 import random
 
-
+#сюда можно добавить свои keywords
 list_values = ['taxi', 'combination', 'immune', 'tie', 'expression', 'chase']
 
 for v in list_values:

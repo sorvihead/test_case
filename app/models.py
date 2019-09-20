@@ -1,6 +1,8 @@
 from app import db
+
 from datetime import date
 from datetime import datetime
+
 from time import time
 
 
@@ -20,6 +22,7 @@ class Data(db.Model):
 
     @classmethod
     def filter(cls, query, column, flt):
+        """Метод, выбирающий нужный фильтр для нужного столбца"""
         if not flt:
             return query
         else:
